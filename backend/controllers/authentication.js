@@ -17,6 +17,17 @@ router.post('/', async (req, res) => {
         where: { email: req.body.email }
     })
 
+    // compare user's typed password with the password in the backend
+    if(!user || !await bcrypt.compare(req.body.password, user.passwordDigest)) {
+        res.status(404).json({
+            message: `Could not find a user with the provided username and password`
+        })
+    // if password matches what was originally hashed, then controller skips to 
+    // else block and responds to log in request
+    } else {
+        res.json({ user })
+    }
+
     console.log(user)
 })
 
