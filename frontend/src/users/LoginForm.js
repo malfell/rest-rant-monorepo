@@ -32,6 +32,17 @@ function LoginForm() {
 
         console.log(data)
 
+        // handles log in 
+        // if requests succeed (has status code of 200), then it saves user 
+        // to CurrentUser context and redirects to home page
+        if(response.status === 200) {
+            setCurrentUser(data.user)
+            history.push(`/`)
+        // if log in fails, then there is error message
+        } else {
+            setErrorMessage(data.message)
+        }
+
     }
 
     return (
