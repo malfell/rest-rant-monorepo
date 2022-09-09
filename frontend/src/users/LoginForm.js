@@ -17,7 +17,20 @@ function LoginForm() {
 
     async function handleSubmit(e) {
         e.preventDefault()
+        // fetch request triggers route handler when log-in form is submitted
+        // uses uses HTTP method and path to invoke route handler
+            // then sends username and password so backend can look it up
+        const response = await fetch(`http://localhost:5000/authentication`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(credentials)
+        })
        
+        const data = await response.json()
+
+        console.log(data)
 
     }
 
