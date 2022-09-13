@@ -2,6 +2,8 @@
 const router = require('express').Router();
 const db = require('../models');
 const bcrypt = require('bcrypt');
+// run: npm install json-web-token
+const jwt = require('jwt')
 
 // require user model
 // will need to query user from the database
@@ -25,7 +27,14 @@ router.post('/', async (req, res) => {
     // if password matches what was originally hashed, then controller skips to 
     // else block and responds to log in request
     } else {
-        res.json({ user })
+        // if user has been found and password matches, use jwt module to create a JWT
+        // first arg is random string for jwt to use to hash the token signature
+            // like SESSION_SECRET, it'll be added to .env file
+        // second arg is object to encode as the payload
+            // this is data to check later to find logged-in user
+        const result = await jwt.encode(process.env.JWT_SECRET, { id:user.userId })
+        // when responding to front end, send back authenticated user and the JWT created
+        res.json({ user: user, token: result.value })
     }
 
     console.log(user)

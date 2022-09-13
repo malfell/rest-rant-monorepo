@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/malfell/rest-rant-monorepo/issues"
   },
-  "homepage": "https://github.com/malfell/rest-rant-monorepo#readme"
+  "homepage": "https://github.com/malfell/rest-rant-monorepo#readme",
+  "dependencies": {
+    "json-web-token": "^3.2.0"
+  }
 }
