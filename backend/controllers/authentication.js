@@ -32,6 +32,18 @@ router.post('/', async (req, res) => {
     console.log(user)
 })
 
+// EXAMPLE ROUTE FOR CROSS-SITE REQUEST FORGERY
+// checks session to see if user is logged in before doing the thing
+router.post('/super-important-route', async (req, res) => {
+    if(req.session.userId){
+        console.log('Do the really important thing')
+        res.send('Done')
+    } else {
+        console.log('You are not authorized to do the super important thing.')
+        res.send('Denied')
+    }
+})
+
 // route handler
 // returns currently logged-in user
 router.get('/profile', async (req, res) => {

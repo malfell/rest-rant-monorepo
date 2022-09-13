@@ -11,9 +11,11 @@ const cookieSession = require('cookie-session')
 // Cookie Session
 // SESSION_SECRET will be a random string that cookie-session can securely encrypt and decrypt
 // session data before sending it to browser as a cookie
+// use sameSite to make sure browsers can't send malicious requests
 app.use(cookieSession({
     name: 'session',
     keys: [ process.env.SESSION_SECRET ],
+    sameSite: 'strict',
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
 // make sure CORS will allow you to include credentials with fetch requests
