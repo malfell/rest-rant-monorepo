@@ -22,6 +22,7 @@ function LoginForm() {
             // then sends username and password so backend can look it up
         const response = await fetch(`http://localhost:5000/authentication`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
