@@ -30,13 +30,16 @@ function LoginForm() {
        
         const data = await response.json()
 
-        console.log(data)
+        // console.log(data)
 
         // handles log in 
         // if requests succeed (has status code of 200), then it saves user 
         // to CurrentUser context and redirects to home page
         if(response.status === 200) {
             setCurrentUser(data.user)
+            console.log(data.token)
+            // save JWT to localStorage so we can send it with future fetch requests
+            localStorage.setItem('token', data.token)
             history.push(`/`)
         // if log in fails, then there is error message
         } else {

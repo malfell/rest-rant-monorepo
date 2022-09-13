@@ -3,7 +3,7 @@ const router = require('express').Router();
 const db = require('../models');
 const bcrypt = require('bcrypt');
 // run: npm install json-web-token
-const jwt = require('jwt')
+const jwt = require('json-web-token')
 
 // require user model
 // will need to query user from the database
@@ -42,19 +42,19 @@ router.post('/', async (req, res) => {
 
 // route handler that handles fetch requests
 // checks for logged-in user every time the React app loads
-router.get('/profile', async (req, res) => {
-    try {
-        // let user = await User.findOne({
-        //     where: {
-        //         userId: 
-        //     }
-        // })
-        // res.json(user)
-        // if no logged-in user, then backend responds with null
-    } catch {
-        res.json(null)
-    }
-})
+// router.get('/profile', async (req, res) => {
+//     try {
+//         let user = await User.findOne({
+//             where: {
+//                 userId: 
+//             }
+//         })
+//         res.json(user)
+//         // if no logged-in user, then backend responds with null
+//     } catch {
+//         res.json(null)
+//     }
+// })
 
 // EXPORT
 module.exports = router
