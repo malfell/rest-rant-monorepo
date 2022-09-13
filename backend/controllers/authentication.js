@@ -42,19 +42,35 @@ router.post('/', async (req, res) => {
 
 // route handler that handles fetch requests
 // checks for logged-in user every time the React app loads
-// router.get('/profile', async (req, res) => {
-//     try {
-//         let user = await User.findOne({
-//             where: {
-//                 userId: 
-//             }
-//         })
-//         res.json(user)
-//         // if no logged-in user, then backend responds with null
-//     } catch {
-//         res.json(null)
-//     }
-// })
+router.get('/profile', async (req, res) => {
+    try {
+        // Split the authorization header into ['Bearer', 'TOKEN']
+        const [authenticationMethod, token] = req.headers.authorization.split(' ')
+
+        // Only handle 'Bearer' authorization for now
+        // (we could add other authorization strategies later):
+        if (authenticationMethod == 'Bearer'){
+
+            // Decode the JWT
+            const result = await jwt.decode(process.env.JWT_SECRET, token)
+
+            // Get logged in user's id from the payload
+            const { id } = result.value
+
+            // Find the user object using their id
+            let user = await User.findOne({
+                where: {
+                    userId: id
+                }
+            })
+            res.json(user)
+        }
+
+        // if no logged-in user, then backend responds with null
+    } catch {
+        res.json(null)
+    }
+})
 
 // EXPORT
 module.exports = router
