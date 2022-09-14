@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useHistory, useParams } from "react-router"
 import CommentCard from './CommentCard'
 import NewCommentForm from "./NewCommentForm";
@@ -37,7 +37,13 @@ function PlaceDetails() {
 
 	async function deleteComment(deletedComment) {
 		await fetch(`http://localhost:5000/places/${place.placeId}/comments/${deletedComment.commentId}`, {
-			method: 'DELETE'
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				// must include JWT with fetch request for deleting comments in front end
+				// now users cannot delete other people's comments
+				'Authorization': `Bearer ${localStorage.getItem('token')}`
+			},
 		})
 
 		setPlace({

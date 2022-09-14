@@ -142,6 +142,7 @@ router.post('/:placeId/comments', async (req, res) => {
     })
 })
 
+// DELETE A COMMENT
 router.delete('/:placeId/comments/:commentId', async (req, res) => {
     let placeId = Number(req.params.placeId)
     let commentId = Number(req.params.commentId)
@@ -156,6 +157,13 @@ router.delete('/:placeId/comments/:commentId', async (req, res) => {
         })
         if (!comment) {
             res.status(404).json({ message: `Could not find comment with id "${commentId}" for place with id "${placeId}"` })
+        // makes sure that a comment can ONLY be deleted if it was authored by the logged-in user
+        // using a '?' in req.currentUser to that the IF statement will run whether a user
+        // is currently logged in or not
+        } else if (comment.authorId !== req.currentUser?.userId) {
+            res.status(403).json({
+                message: `You do not have permission to delete comment "${comment.commentId}"`
+            })
         } else {
             await comment.destroy()
             res.json(comment)
