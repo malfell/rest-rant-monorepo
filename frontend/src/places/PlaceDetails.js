@@ -51,6 +51,11 @@ function PlaceDetails() {
 		const response = await fetch(`http://localhost:5000/places/${place.placeId}/comments`, {
 			method: 'POST',
 			headers: {
+				// must include the JWT when making the fetch request that creates new comment
+				// if we skip this step, then request that route handler receives won't
+				// have the JWT to parse, so it'll appear to backend as if user isn't 
+				// logged in even if they are
+				'Authorization': `Bearer ${localStorage.getItem('token')}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(commentAttributes)
