@@ -13,6 +13,9 @@ router.post('/', async (req, res) => {
     // hashes password
     const user = await User.create({
         ...rest,
+        // sets any new user as reviewer
+        // Now users can't sign up as admin even by sending hand-written fetch requests
+        role: 'reviewer',
         passwordDigest: await bcrypt.hash(password, 10)
     })
     res.json(user)
