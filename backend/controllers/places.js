@@ -1,10 +1,18 @@
 const router = require('express').Router()
-const { jwt } = require('json-web-token')
 const db = require("../models")
+import { CurrentUser } from './contexts/CurrentUser';
 
 const { Place, Comment, User } = db
+const { currentUser } = useContext(CurrentUser)
 
+// CREATE A PLACE
 router.post('/', async (req, res) => {
+    // admin permissions
+    // if user isn't admin, they cannot add a place
+    if(req.currentUser?.role !== 'admin'){
+        return res.status(403).json({ message: 'You are not allowed to add a place' })
+    }
+
     if (!req.body.pic) {
         req.body.pic = 'http://placekitten.com/400/400'
     }
@@ -18,13 +26,13 @@ router.post('/', async (req, res) => {
     res.json(place)
 })
 
-
+// GET ALL PLACES
 router.get('/', async (req, res) => {
     const places = await Place.findAll()
     res.json(places)
 })
 
-
+// GET SPECIFIC PLACE
 router.get('/:placeId', async (req, res) => {
     let placeId = Number(req.params.placeId)
     if (isNaN(placeId)) {
@@ -45,7 +53,13 @@ router.get('/:placeId', async (req, res) => {
     }
 })
 
+// EDIT A PLACE
 router.put('/:placeId', async (req, res) => {
+    // admin permissions
+    if(req.currentUser?.role !== 'admin'){
+        return res.status(403).json({ message: 'You are not allowed to edit places' })
+    }
+
     let placeId = Number(req.params.placeId)
     if (isNaN(placeId)) {
         res.status(404).json({ message: `Invalid id "${placeId}"` })
@@ -63,7 +77,13 @@ router.put('/:placeId', async (req, res) => {
     }
 })
 
+// DELETE A PLACE
 router.delete('/:placeId', async (req, res) => {
+    // admin permissions
+    if(req.currentUser?.role !== 'admin'){
+        return res.status(403).json({ message: 'You are not allowed to delete places' })
+    }
+
     let placeId = Number(req.params.placeId)
     if (isNaN(placeId)) {
         res.status(404).json({ message: `Invalid id "${placeId}"` })
@@ -95,32 +115,6 @@ router.post('/:placeId/comments', async (req, res) => {
     if (!place) {
         return res.status(404).json({ message: `Could not find place with id "${placeId}"` })
     }
-
-    // NOT NEEDED BUT KEEPING FOR FUTURE REFERENCE
-    // finds logged-in user based on JWT token
-    // let currentUser;
-    // try {
-    //     const [method, token] = req.headers.authorization.split(' ')
-    //     if(method == 'Bearer'){
-    //         const result = await jwt.decode(process.env.JWT_SECRET, token)
-    //         const { id } = result.value
-    //         currentUser = await User.findOne({
-    //             where: {
-    //                 userId: id
-    //             }
-    //         })
-    //     }
-    // } catch {
-    //     currentUser = null
-    // }
-
-    // const author = await User.findOne({
-    //     where: { userId: req.body.authorId }
-    // })
-
-    // if (!author) {
-    //     res.status(404).json({ message: `Could not find author with id "${req.body.authorId}"` })
-    // }
 
     // responds with error if user is not logged in
     if (!req.currentUser) {
